@@ -26,15 +26,20 @@ function ToDo() {
 
     const odgovor = await axios.post("http://localhost:8080/api/poslici", task)
 
-    setTasks(t => [...t, task])
+    fetchAPI()
     document.getElementById('task-name').value = '';
 
   }
 
   async function handleRemove(index) {
-
-    const odgovor = await axios.delete(`http://localhost:8080/api/poslici/${index}`);
-    console.log(odgovor)
+    
+    try {
+      const odgovor = await axios.delete(`http://localhost:8080/api/poslici/${index}`);
+      odgovor();
+      console.log(odgovor)
+    } catch (e) {
+      console.log(`VALJDAAAAA${e}`)
+    }
 
     fetchAPI()
 
@@ -42,7 +47,7 @@ function ToDo() {
 
   return (<div>
     <h2>To-Do List</h2>
-    <ol> {tasks.map((e, i) => <li key={i} onClick={() => handleRemove(e._id)}>Task: {e.name}<p>Do it by {e.datum}, {e.vreme}</p></li>)} </ol>
+    <ol> {tasks.map((e, i) => <li>Task: {e.name}<p>Do it by {e.datum}, {e.vreme} <button key={i} onClick={() => handleRemove(e._id)}>Remove</button></p></li>)} </ol>
     <p>
       <input type='text' placeholder='Enter task' id='task-name'/>
       <input type='date' id='task-date'/>
